@@ -3,586 +3,1455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanvas SPLTV – Substitusi & Eliminasi Interaktif</title>
+    <title>SPLTV Explorer – Kanvas Interaktif Substitusi & Eliminasi</title>
     <style>
+        :root {
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #f59e0b;
+            --accent-light: #fff7ed;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --radius: 1.25rem;
+            --radius-sm: 0.75rem;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
+
         body {
-            background: #f1f5f9;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #e8edf5 0%, #f0f4f8 30%, #ede9fe 60%, #f5f3ff 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 1.5rem;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 2rem;
+            align-items: flex-start;
         }
-        .main-container {
+
+        .app-container {
             width: 100%;
-            max-width: 1300px;
-            background: #ffffff;
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
-            padding: 2rem 2.5rem;
+            max-width: 1350px;
             display: flex;
             flex-direction: column;
-            gap: 1.8rem;
+            gap: 1.5rem;
         }
-        h1 {
+
+        /* HEADER */
+        .app-header {
             text-align: center;
-            color: #0f172a;
+            padding: 0.5rem 0;
+        }
+        .app-header .logo {
+            font-size: 2.6rem;
+            margin-bottom: 0.2rem;
+            display: block;
+        }
+        .app-header h1 {
             font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #0f172a;
+            display: inline;
+        }
+        .app-header .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-        .subtitle {
-            text-align: center;
-            color: #475569;
+        .app-header .subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+
+        /* MAIN LAYOUT */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* CARD */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
             font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            color: #0f172a;
         }
-        /* Bagian pool persamaan */
+        .card-header .icon {
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .icon-indigo {
+            background: #eef2ff;
+            color: #6366f1;
+        }
+        .icon-amber {
+            background: #fff7ed;
+            color: #f59e0b;
+        }
+        .icon-emerald {
+            background: #ecfdf5;
+            color: #10b981;
+        }
+        .icon-rose {
+            background: #fff1f2;
+            color: #ef4444;
+        }
+
+        /* EQUATION INPUT CARDS */
+        .equation-input-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .equation-input-row:last-child {
+            border-bottom: none;
+        }
+        .eq-label {
+            font-weight: 700;
+            color: #6366f1;
+            font-size: 0.85rem;
+            min-width: 60px;
+            letter-spacing: 0.3px;
+        }
+        .coeff-group {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+        .coeff-group input {
+            width: 58px;
+            padding: 0.5rem 0.3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.6rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1e293b;
+            outline: none;
+            transition: var(--transition);
+            background: #fafbfc;
+        }
+        .coeff-group input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: #fff;
+        }
+        .coeff-group .var-label {
+            font-weight: 700;
+            color: #475569;
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+        .coeff-group .op-sign {
+            font-weight: 700;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            width: 16px;
+            text-align: center;
+        }
+        .eq-equals {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: #0f172a;
+            margin: 0 0.3rem;
+        }
+        .const-input {
+            width: 65px;
+            padding: 0.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.6rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: #fffbeb;
+            border-color: #fcd34d;
+            outline: none;
+            transition: var(--transition);
+        }
+        .const-input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            background: #fff;
+        }
+
+        /* EQUATION POOL (visual cards) */
         .equation-pool {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 0.8rem;
         }
         .equation-card {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.5rem;
-            min-width: 260px;
+            border-radius: 1rem;
+            padding: 0.9rem 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
+            gap: 0.3rem;
+            user-select: none;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            flex: 1;
+            min-width: 200px;
             justify-content: center;
-            gap: 0.4rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
         .equation-card:hover {
-            border-color: #818cf8;
-            background: #eef2ff;
+            border-color: #a5b4fc;
+            background: #f5f7ff;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -10px rgba(79,70,229,0.15);
+            box-shadow: var(--shadow-lg);
         }
         .equation-card.selected {
             border-color: #f59e0b;
-            background: #fff7ed;
-            box-shadow: 0 0 0 3px rgba(245,158,11,0.2);
+            background: #fffdf5;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.13);
+            animation: pulse-glow 2s ease-in-out infinite;
         }
-        .term, .const-term {
-            background: white;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 0.8rem;
-            padding: 0.5rem 0.8rem;
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: #1e293b;
-            cursor: grab;
-            user-select: none;
-            transition: 0.15s;
-            display: inline-block;
+        @keyframes pulse-glow {
+            0%,
+            100% {
+                box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.13);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(245, 158, 11, 0.04);
+            }
         }
-        .term:active, .const-term:active {
-            cursor: grabbing;
-            opacity: 0.7;
-            transform: scale(0.97);
-        }
-        .operator {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #334155;
-            margin: 0 2px;
-        }
-        .equals {
+        .equation-card .eq-id-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #6366f1;
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 0.7rem;
             font-weight: 800;
-            font-size: 1.3rem;
-            margin: 0 6px;
-            color: #0f172a;
-        }
-        /* Toolbar */
-        .toolbar {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            background: #f1f5f9;
-            padding: 1rem 1.5rem;
-            border-radius: 1.5rem;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
         }
-        .toolbar button {
-            background: #4f46e5;
-            color: white;
-            border: none;
-            padding: 0.65rem 1.4rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .toolbar button:hover {
-            background: #4338ca;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(79,70,229,0.3);
-        }
-        .toolbar button.secondary {
-            background: #64748b;
-        }
-        .toolbar button.secondary:hover {
-            background: #475569;
-        }
-        .multiplier-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: white;
-            padding: 0.3rem 1rem;
-            border-radius: 2rem;
-            border: 1px solid #cbd5e1;
-        }
-        .multiplier-group input {
-            width: 65px;
-            padding: 0.4rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 0.8rem;
-            text-align: center;
-            font-weight: 600;
-            outline: none;
-        }
-        /* Workspace */
-        .workspace-title {
+        .drag-term {
+            background: #fff;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.7rem;
+            padding: 0.4rem 0.7rem;
             font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
+            font-size: 0.95rem;
+            color: #1e293b;
+            cursor: grab;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: inline-flex;
             align-items: center;
+            gap: 2px;
         }
+        .drag-term:active {
+            cursor: grabbing;
+            transform: scale(0.94);
+            border-color: #6366f1;
+            background: #eef2ff;
+        }
+        .drag-term.const-term {
+            background: #fffdf5;
+            border-color: #fcd34d;
+            color: #92400e;
+        }
+        .drag-term:hover {
+            border-color: #818cf8;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+        }
+        .op-display {
+            font-weight: 700;
+            color: #64748b;
+            font-size: 1rem;
+            margin: 0 1px;
+        }
+        .eq-sign-display {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin: 0 4px;
+            color: #0f172a;
+        }
+
+        /* WORKSPACE */
         .workspace-container {
             display: flex;
-            gap: 2rem;
+            gap: 1rem;
             flex-wrap: wrap;
         }
         .workspace-half {
             flex: 1;
-            min-width: 250px;
-            background: #ffffff;
-            border: 2px dashed #cbd5e1;
-            border-radius: 1.5rem;
-            padding: 1.2rem;
+            min-width: 180px;
+            background: #fafbfe;
+            border: 2.5px dashed #cbd5e1;
+            border-radius: 1rem;
+            padding: 1rem;
+            min-height: 90px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 0.4rem;
-            min-height: 80px;
-            transition: 0.2s;
+            transition: var(--transition);
+            position: relative;
         }
         .workspace-half.drag-over {
-            border-color: #4f46e5;
-            background: #f5f3ff;
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.06);
         }
-        .workspace-half h4 {
-            width: 100%;
-            font-size: 0.9rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        .result-display {
-            background: #fef9c3;
+        .workspace-half .ws-label {
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            background: #fff;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6366f1;
             border-radius: 1rem;
-            padding: 1rem 1.5rem;
-            font-weight: 700;
-            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            letter-spacing: 0.4px;
+        }
+        .workspace-half .empty-hint {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-style: italic;
+            width: 100%;
             text-align: center;
-            display: none;
         }
-        .btn-icon {
-            font-size: 1.1rem;
-        }
-        hr {
-            border: 0.5px solid #e2e8f0;
-            margin: 0.5rem 0;
-        }
-        .add-equation-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 2rem;
+        .ws-term {
+            background: #fff;
+            border: 2px solid #818cf8;
+            border-radius: 0.6rem;
+            padding: 0.35rem 0.6rem;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: 0.2s;
-            display: block;
-            margin: 0.5rem auto 0;
+            transition: var(--transition);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: #eef2ff;
+            user-select: none;
         }
-        .add-equation-btn:hover {
+        .ws-term.const-ws {
+            background: #fffdf5;
+            border-color: #fcd34d;
+        }
+        .ws-term .remove-x {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.6rem;
+            cursor: pointer;
+            margin-left: 2px;
+            transition: var(--transition);
+            font-weight: 900;
+            line-height: 1;
+        }
+        .ws-term .remove-x:hover {
+            background: #dc2626;
+            transform: scale(1.2);
+        }
+        .ws-op {
+            font-weight: 700;
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            border: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            letter-spacing: 0.2px;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-primary {
+            background: #6366f1;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4f46e5;
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+        }
+        .btn-accent {
+            background: #f59e0b;
+            color: #fff;
+        }
+        .btn-accent:hover {
+            background: #d97706;
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+        }
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-success:hover {
             background: #059669;
-            box-shadow: 0 6px 15px rgba(16,185,129,0.3);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+        }
+        .btn-outline {
+            background: #fff;
+            border: 2px solid #cbd5e1;
+            color: #475569;
+        }
+        .btn-outline:hover {
+            border-color: #6366f1;
+            color: #6366f1;
+            background: #f8faff;
+        }
+        .btn-danger {
+            background: #fff;
+            border: 2px solid #fecaca;
+            color: #ef4444;
+        }
+        .btn-danger:hover {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+        .multiplier-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            border: 2px solid #e2e8f0;
+        }
+        .multiplier-wrap input {
+            width: 55px;
+            border: none;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            outline: none;
+            background: transparent;
+            color: #1e293b;
+        }
+        .multiplier-wrap span {
+            font-weight: 700;
+            color: #6366f1;
+            font-size: 1rem;
+        }
+
+        /* RESULT */
+        .result-panel {
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+            border: 2px solid #6ee7b7;
+            border-radius: 1rem;
+            padding: 1.2rem 1.5rem;
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+        .result-panel.show {
+            display: block;
+        }
+        .result-panel h3 {
+            color: #065f46;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .result-values {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #064e3b;
+        }
+        .result-values span {
+            background: #fff;
+            padding: 0.4rem 0.9rem;
+            border-radius: 0.6rem;
+            border: 2px solid #a7f3d0;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* LOG */
+        .log-area {
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: #475569;
+            padding: 0.5rem;
+            background: #fafbfc;
+            border-radius: 0.7rem;
+            border: 1px solid #e2e8f0;
+        }
+        .log-area .log-entry {
+            padding: 0.3rem 0;
+            border-bottom: 1px dotted #e2e8f0;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.78rem;
+        }
+        .log-area .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+            body {
+                padding: 0.8rem;
+            }
+            .app-header h1 {
+                font-size: 1.4rem;
+            }
+            .equation-card {
+                min-width: 100%;
+                font-size: 0.85rem;
+            }
+            .coeff-group input {
+                width: 44px;
+                font-size: 0.8rem;
+            }
+            .workspace-half {
+                min-height: 60px;
+            }
+            .btn {
+                font-size: 0.75rem;
+                padding: 0.45rem 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-<div class="main-container">
-    <h1>🧮 Kanvas Eksplorasi SPLTV</h1>
-    <p class="subtitle">Seret suku ke ruas kiri/kanan · Susun persamaan · Kalikan, kurangkan, substitusi!</p>
-
-    <!-- Kumpulan persamaan -->
-    <div class="equation-pool" id="equationPool"></div>
-
-    <!-- Toolbar aksi -->
-    <div class="toolbar">
-        <button id="btnReset" class="secondary"><span>🔄</span> Reset Awal</button>
-        <button id="btnClearWorkspace"><span>🧹</span> Kosongkan Ruas</button>
-        <div class="multiplier-group">
-            <label>✖️</label>
-            <input type="number" id="multiplierInput" value="2" step="any">
-            <button id="btnMultiply">Kalikan Persamaan Terpilih</button>
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="app-header">
+            <span class="logo">🧮</span>
+            <h1>Kanvas Eksplorasi SPLTV</h1>
+            <span class="badge">Interaktif</span>
+            <p class="subtitle">Input bebas • Seret & Susun • Eliminasi • Substitusi • Hitung Solusi</p>
         </div>
-        <button id="btnSubtract"><span>➖</span> Kurangkan Dua Persamaan</button>
-        <button id="btnSubstitute"><span>🔁</span> Substitusi Ekspresi</button>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+            <!-- KOLOM KIRI: INPUT & POOL -->
+            <div>
+                <!-- Card: Input Persamaan -->
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <div class="card-header">
+                        <span class="icon icon-indigo">✏️</span> Persamaan (Input Bebas)
+                    </div>
+                    <div id="equationInputs">
+                        <!-- Dijsi JS -->
+                    </div>
+                    <button class="btn btn-outline" id="btnUpdateFromInputs" style="margin-top:0.8rem;width:100%;justify-content:center;">
+                        🔄 Perbarui Tampilan
+                    </button>
+                </div>
+
+                <!-- Card: Pool Persamaan Visual -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon icon-amber">📦</span> Kumpulan Persamaan
+                        <span style="font-weight:400;font-size:0.75rem;color:#94a3b8;margin-left:auto;">Klik untuk pilih • Seret sukunya</span>
+                    </div>
+                    <div class="equation-pool" id="equationPool"></div>
+                    <button class="btn btn-accent" id="btnAddBlankEquation" style="margin-top:0.8rem;width:100%;justify-content:center;">
+                        ➕ Tambah Persamaan Kosong
+                    </button>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: WORKSPACE & HASIL -->
+            <div>
+                <!-- Card: Toolbar -->
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <div class="card-header">
+                        <span class="icon icon-indigo">🔧</span> Operasi
+                    </div>
+                    <div class="toolbar">
+                        <button class="btn btn-outline" id="btnReset">🔄 Reset Default</button>
+                        <button class="btn btn-danger" id="btnClearWorkspace">🧹 Kosongkan Kanvas</button>
+                        <div class="multiplier-wrap">
+                            <span>✖️</span>
+                            <input type="number" id="multiplierInput" value="2" step="any">
+                        </div>
+                        <button class="btn btn-primary" id="btnMultiply">Kalikan Terpilih</button>
+                        <button class="btn btn-accent" id="btnSubtract">➖ Kurangkan</button>
+                        <button class="btn btn-outline" id="btnSubstitute">🔁 Substitusi</button>
+                    </div>
+                </div>
+
+                <!-- Card: Kanvas Kerja -->
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <div class="card-header">
+                        <span class="icon icon-emerald">🎨</span> Kanvas Susun Persamaan Baru
+                    </div>
+                    <div class="workspace-container">
+                        <div class="workspace-half" id="leftRuas">
+                            <span class="ws-label">⬅️ Ruas Kiri</span>
+                            <span class="empty-hint">Seret suku ke sini</span>
+                        </div>
+                        <div class="workspace-half" id="rightRuas">
+                            <span class="ws-label">➡️ Ruas Kanan</span>
+                            <span class="empty-hint">Seret suku ke sini</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-success" id="btnAddNewEquation" style="margin-top:1rem;width:100%;justify-content:center;">
+                        ➕ Jadikan Persamaan Baru dari Kanvas
+                    </button>
+                </div>
+
+                <!-- Card: Hasil Solusi -->
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <div class="card-header">
+                        <span class="icon icon-emerald">✅</span> Solusi Sistem (3 Persamaan Pertama)
+                    </div>
+                    <div class="result-panel" id="resultDisplay">
+                        <h3>🎯 Solusi Ditemukan:</h3>
+                        <div class="result-values" id="resultValues"></div>
+                        <p style="font-size:0.8rem;color:#64748b;margin-top:0.5rem;" id="detInfo"></p>
+                    </div>
+                    <button class="btn btn-success" id="btnSolve" style="margin-top:0.8rem;width:100%;justify-content:center;">
+                        🔍 Hitung Solusi (Cramer's Rule)
+                    </button>
+                </div>
+
+                <!-- Card: Log -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon icon-rose">📝</span> Log Operasi
+                    </div>
+                    <div class="log-area" id="logArea">
+                        <span style="color:#cbd5e1;">Belum ada operasi...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Area kerja seret -->
-    <div class="workspace-title">
-        <span>📌 Kanvas Kerja (Susun Persamaan Baru)</span>
-        <button id="btnAddNewEquation" class="add-equation-btn">➕ Jadikan Persamaan Baru</button>
-    </div>
-    <div class="workspace-container">
-        <div class="workspace-half" id="leftRuas">
-            <h4>⬅️ Ruas Kiri</h4>
-        </div>
-        <div class="workspace-half" id="rightRuas">
-            <h4>➡️ Ruas Kanan</h4>
-        </div>
-    </div>
-    <p style="color:#64748b; font-size:0.9rem; margin-top:-0.5rem;">Seret suku (x, y, z, konstanta) dari persamaan di atas ke salah satu ruas.</p>
-
-    <!-- Hasil akhir -->
-    <div id="resultDisplay" class="result-display"></div>
-</div>
-
-<script>
-    (function() {
-        // ===================== DATA =====================
-        let equations = [
-            { id: 1, terms: [{coeff:1, var:'x'}, {coeff:1, var:'y'}, {coeff:1, var:'z'}], constant: 6 },
-            { id: 2, terms: [{coeff:2, var:'x'}, {coeff:-1, var:'y'}, {coeff:1, var:'z'}], constant: 3 },
-            { id: 3, terms: [{coeff:1, var:'x'}, {coeff:2, var:'y'}, {coeff:-1, var:'z'}], constant: 3 }
-        ];
-        let selectedEquationId = null;
-
-        // ===================== RENDER =====================
-        function renderEquationPool() {
-            const pool = document.getElementById('equationPool');
-            pool.innerHTML = '';
-            equations.forEach(eq => {
-                const card = document.createElement('div');
-                card.className = 'equation-card';
-                card.setAttribute('data-eq-id', eq.id);
-                card.addEventListener('click', (e) => {
-                    if (e.target === card || e.target.classList.contains('operator') || e.target.classList.contains('equals')) {
-                        selectEquation(eq.id);
-                    }
-                });
-                eq.terms.forEach((term, idx) => {
-                    if (idx > 0) {
-                        const op = document.createElement('span');
-                        op.className = 'operator';
-                        op.textContent = term.coeff >= 0 ? '+' : '−';
-                        card.appendChild(op);
-                    }
-                    const termEl = createDraggableTerm(term.coeff, term.var, eq.id);
-                    card.appendChild(termEl);
-                });
-                const eqSign = document.createElement('span');
-                eqSign.className = 'equals';
-                eqSign.textContent = '=';
-                card.appendChild(eqSign);
-                const constEl = createDraggableConstant(eq.constant, eq.id);
-                card.appendChild(constEl);
-                pool.appendChild(card);
-            });
-        }
-
-        function createDraggableTerm(coeff, variable, eqId) {
-            const el = document.createElement('span');
-            el.className = 'term';
-            el.textContent = formatTermDisplay(coeff, variable);
-            el.setAttribute('data-type', 'term');
-            el.setAttribute('data-coeff', coeff);
-            el.setAttribute('data-var', variable);
-            el.setAttribute('data-eq-id', eqId);
-            el.draggable = true;
-            el.addEventListener('dragstart', handleDragStart);
-            el.addEventListener('dragend', handleDragEnd);
-            return el;
-        }
-
-        function createDraggableConstant(value, eqId) {
-            const el = document.createElement('span');
-            el.className = 'const-term';
-            el.textContent = value;
-            el.setAttribute('data-type', 'constant');
-            el.setAttribute('data-value', value);
-            el.setAttribute('data-eq-id', eqId);
-            el.draggable = true;
-            el.addEventListener('dragstart', handleDragStart);
-            el.addEventListener('dragend', handleDragEnd);
-            return el;
-        }
-
-        function formatTermDisplay(coeff, variable) {
-            if (coeff === 1) return variable;
-            if (coeff === -1) return `-${variable}`;
-            return `${coeff}${variable}`;
-        }
-
-        function selectEquation(id) {
-            selectedEquationId = id;
-            document.querySelectorAll('.equation-card').forEach(c => c.classList.remove('selected'));
-            const card = document.querySelector(`.equation-card[data-eq-id='${id}']`);
-            if (card) card.classList.add('selected');
-        }
-
-        // ===================== DRAG & DROP =====================
-        let draggedElement = null;
-
-        function handleDragStart(e) {
-            draggedElement = this;
-            this.style.opacity = '0.5';
-            e.dataTransfer.setData('text/plain', '');
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-            draggedElement = null;
-            document.querySelectorAll('.workspace-half').forEach(ws => ws.classList.remove('drag-over'));
-        }
-
-        function allowDrop(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
-        }
-
-        function onDropLeft(e) {
-            e.preventDefault();
-            const target = document.getElementById('leftRuas');
-            target.classList.remove('drag-over');
-            if (!draggedElement) return;
-            addCloneToWorkspace(target);
-        }
-
-        function onDropRight(e) {
-            e.preventDefault();
-            const target = document.getElementById('rightRuas');
-            target.classList.remove('drag-over');
-            if (!draggedElement) return;
-            addCloneToWorkspace(target);
-        }
-
-        function addCloneToWorkspace(container) {
-            const clone = draggedElement.cloneNode(true);
-            clone.draggable = true;
-            clone.addEventListener('dragstart', handleDragStart);
-            clone.addEventListener('dragend', handleDragEnd);
-            clone.style.opacity = '1';
-            const existingTerms = container.querySelectorAll('.term, .const-term');
-            if (existingTerms.length > 0) {
-                const op = document.createElement('span');
-                op.className = 'operator';
-                op.textContent = '+';
-                container.appendChild(op);
-            }
-            container.appendChild(clone);
-        }
-
-        // Setup event listeners untuk workspace (menggantikan atribut HTML)
-        function setupWorkspaceListeners() {
-            const leftRuas = document.getElementById('leftRuas');
-            const rightRuas = document.getElementById('rightRuas');
-            leftRuas.addEventListener('dragover', allowDrop);
-            leftRuas.addEventListener('drop', onDropLeft);
-            rightRuas.addEventListener('dragover', allowDrop);
-            rightRuas.addEventListener('drop', onDropRight);
-        }
-
-        // ===================== OPERASI TOOLBAR =====================
-
-        // Reset
-        document.getElementById('btnReset').addEventListener('click', () => {
-            equations = [
-                { id: 1, terms: [{coeff:1, var:'x'}, {coeff:1, var:'y'}, {coeff:1, var:'z'}], constant: 6 },
-                { id: 2, terms: [{coeff:2, var:'x'}, {coeff:-1, var:'y'}, {coeff:1, var:'z'}], constant: 3 },
-                { id: 3, terms: [{coeff:1, var:'x'}, {coeff:2, var:'y'}, {coeff:-1, var:'z'}], constant: 3 }
+    <script>
+        (function() {
+            // ==================== DATA ====================
+            let equations = [
+                { id: 1, x: 1, y: 1, z: 1, constant: 6 },
+                { id: 2, x: 2, y: -1, z: 1, constant: 3 },
+                { id: 3, x: 1, y: 2, z: -1, constant: 3 }
             ];
-            clearWorkspace();
-            selectedEquationId = null;
-            renderEquationPool();
-            hideResult();
-        });
+            let selectedEquationId = null;
+            let idCounter = 4;
+            let draggedElement = null;
+            let logEntries = [];
 
-        function clearWorkspace() {
-            document.getElementById('leftRuas').innerHTML = '<h4>⬅️ Ruas Kiri</h4>';
-            document.getElementById('rightRuas').innerHTML = '<h4>➡️ Ruas Kanan</h4>';
-            // Re-attach listeners karena innerHTML mereset elemen
-            setupWorkspaceListeners();
-        }
-        document.getElementById('btnClearWorkspace').addEventListener('click', clearWorkspace);
+            // ==================== LOG ====================
+            function addLog(msg) {
+                const now = new Date();
+                const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                logEntries.unshift({ time, msg });
+                if (logEntries.length > 30) logEntries.pop();
+                renderLog();
+            }
 
-        // Perkalian
-        document.getElementById('btnMultiply').addEventListener('click', () => {
-            if (!selectedEquationId) {
-                alert('⚠️ Pilih dulu persamaan yang akan dikalikan (klik kartunya).');
-                return;
+            function renderLog() {
+                const logArea = document.getElementById('logArea');
+                if (logEntries.length === 0) {
+                    logArea.innerHTML = '<span style="color:#cbd5e1;">Belum ada operasi...</span>';
+                    return;
+                }
+                logArea.innerHTML = logEntries.map(l =>
+                    `<div class="log-entry">[${l.time}] ${l.msg}</div>`
+                ).join('');
             }
-            const factor = parseFloat(document.getElementById('multiplierInput').value);
-            if (isNaN(factor)) return;
-            const eq = equations.find(e => e.id === selectedEquationId);
-            eq.terms.forEach(t => t.coeff *= factor);
-            eq.constant *= factor;
-            renderEquationPool();
-        });
 
-        // Pengurangan dua persamaan
-        document.getElementById('btnSubtract').addEventListener('click', () => {
-            if (!selectedEquationId) {
-                alert('⚠️ Pilih persamaan pertama (yang akan dikurangi).');
-                return;
-            }
-            const firstEq = equations.find(e => e.id === selectedEquationId);
-            const secondId = prompt('Masukkan ID persamaan kedua (pengurang):');
-            if (!secondId) return;
-            const secondEq = equations.find(e => e.id === parseInt(secondId));
-            if (!secondEq) {
-                alert('ID tidak valid.');
-                return;
-            }
-            const newTerms = [];
-            const vars = ['x','y','z'];
-            vars.forEach(v => {
-                const c1 = firstEq.terms.find(t => t.var === v)?.coeff || 0;
-                const c2 = secondEq.terms.find(t => t.var === v)?.coeff || 0;
-                const newCoeff = c1 - c2;
-                if (Math.abs(newCoeff) > 1e-9) newTerms.push({coeff: newCoeff, var: v});
-            });
-            const newConst = firstEq.constant - secondEq.constant;
-            const newId = Math.max(...equations.map(e => e.id), 0) + 1;
-            equations.push({ id: newId, terms: newTerms, constant: newConst });
-            renderEquationPool();
-            alert(`✅ Persamaan baru (ID ${newId}) telah ditambahkan.`);
-        });
+            // ==================== RENDER INPUTS ====================
+            function renderEquationInputs() {
+                const container = document.getElementById('equationInputs');
+                container.innerHTML = '';
+                equations.forEach((eq, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'equation-input-row';
+                    row.innerHTML = `
+                    <span class="eq-label">Pers. ${eq.id}</span>
+                    <div class="coeff-group">
+                      <input type="number" step="any" value="${eq.x}" data-eq-id="${eq.id}" data-var="x" class="coeff-x">
+                      <span class="var-label">x</span>
+                      <span class="op-sign">+</span>
+                      <input type="number" step="any" value="${eq.y}" data-eq-id="${eq.id}" data-var="y" class="coeff-y">
+                      <span class="var-label">y</span>
+                      <span class="op-sign">+</span>
+                      <input type="number" step="any" value="${eq.z}" data-eq-id="${eq.id}" data-var="z" class="coeff-z">
+                      <span class="var-label">z</span>
+                    </div>
+                    <span class="eq-equals">=</span>
+                    <input type="number" step="any" value="${eq.constant}" data-eq-id="${eq.id}" data-var="const" class="const-input">
+                    <button class="btn btn-danger" data-delete-eq="${eq.id}" style="padding:0.3rem 0.7rem;font-size:0.7rem;margin-left:0.3rem;">🗑️</button>
+                  `;
+                    container.appendChild(row);
+                });
 
-        // Substitusi dari ekspresi yang disusun di kanvas
-        document.getElementById('btnSubstitute').addEventListener('click', () => {
-            if (!selectedEquationId) {
-                alert('⚠️ Pilih persamaan target yang akan disubstitusi.');
-                return;
-            }
-            const targetEq = equations.find(e => e.id === selectedEquationId);
-            const leftExpr = parseWorkspaceSide('leftRuas');
-            const rightExpr = parseWorkspaceSide('rightRuas');
-            if (leftExpr.terms.length !== 1 || Math.abs(leftExpr.terms[0].coeff) !== 1) {
-                alert('⚠️ Ruas kiri harus berisi tepat satu variabel dengan koefisien 1 (contoh: x, atau -y).');
-                return;
-            }
-            const isolatedVar = leftExpr.terms[0].var;
-            const isolatedCoeff = leftExpr.terms[0].coeff;
-            const rightConstant = rightExpr.constant;
-            const rightTerms = rightExpr.terms;
-            const multiplier = isolatedCoeff === 1 ? 1 : -1;
-            const newTermsMap = { x:0, y:0, z:0 };
-            targetEq.terms.forEach(t => {
-                if (t.var === isolatedVar) {
-                    rightTerms.forEach(rt => {
-                        newTermsMap[rt.var] = (newTermsMap[rt.var] || 0) + t.coeff * multiplier * rt.coeff;
+                // Attach input listeners
+                container.querySelectorAll('input').forEach(inp => {
+                    inp.addEventListener('change', function() {
+                        const eqId = parseInt(this.getAttribute('data-eq-id'));
+                        const varName = this.getAttribute('data-var');
+                        const val = parseFloat(this.value) || 0;
+                        const eq = equations.find(e => e.id === eqId);
+                        if (!eq) return;
+                        if (varName === 'const') {
+                            eq.constant = val;
+                        } else {
+                            eq[varName] = val;
+                        }
+                        renderEquationPool();
+                        hideResult();
+                        addLog(`📝 Ubah ${varName==='const'?'konstanta':varName} pers.${eqId} → ${val}`);
                     });
-                    targetEq.constant += t.coeff * multiplier * rightConstant;
+                });
+
+                // Delete buttons
+                container.querySelectorAll('[data-delete-eq]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const eqId = parseInt(this.getAttribute('data-delete-eq'));
+                        if (equations.length <= 1) {
+                            alert('⚠️ Minimal harus ada 1 persamaan.');
+                            return;
+                        }
+                        equations = equations.filter(e => e.id !== eqId);
+                        if (selectedEquationId === eqId) selectedEquationId = null;
+                        addLog(`🗑️ Hapus persamaan ID ${eqId}`);
+                        renderAll();
+                    });
+                });
+            }
+
+            // ==================== RENDER POOL ====================
+            function renderEquationPool() {
+                const pool = document.getElementById('equationPool');
+                pool.innerHTML = '';
+                equations.forEach(eq => {
+                    const card = document.createElement('div');
+                    card.className = 'equation-card';
+                    if (eq.id === selectedEquationId) card.classList.add('selected');
+                    card.setAttribute('data-eq-id', eq.id);
+                    card.addEventListener('click', (e) => {
+                        if (e.target === card || e.target.classList.contains('op-display') || e.target
+                            .classList.contains('eq-sign-display')) {
+                            selectEquation(eq.id);
+                        }
+                    });
+
+                    // ID badge
+                    const badge = document.createElement('span');
+                    badge.className = 'eq-id-badge';
+                    badge.textContent = eq.id;
+                    card.appendChild(badge);
+
+                    // Terms
+                    const vars = ['x', 'y', 'z'];
+                    let first = true;
+                    vars.forEach(v => {
+                        const coeff = eq[v];
+                        if (coeff === 0 && vars.some(v2 => eq[v2] !== 0)) {
+                            // Skip zero terms if there are other non-zero terms
+                            if (eq.x === 0 && eq.y === 0 && eq.z === 0) {
+                                // All zero, still show 0x
+                                if (!first) {
+                                    const op = document.createElement('span');
+                                    op.className = 'op-display';
+                                    op.textContent = '+';
+                                    card.appendChild(op);
+                                }
+                                const termEl = createDragTerm(0, v, eq.id);
+                                card.appendChild(termEl);
+                                first = false;
+                            }
+                            return;
+                        }
+                        if (coeff === 0) return;
+                        if (!first) {
+                            const op = document.createElement('span');
+                            op.className = 'op-display';
+                            op.textContent = coeff >= 0 ? '+' : '−';
+                            card.appendChild(op);
+                        } else {
+                            if (coeff < 0) {
+                                const op = document.createElement('span');
+                                op.className = 'op-display';
+                                op.textContent = '−';
+                                card.appendChild(op);
+                            }
+                        }
+                        const displayCoeff = coeff < 0 && first ? Math.abs(coeff) : coeff;
+                        const termEl = createDragTerm(displayCoeff, v, eq.id);
+                        card.appendChild(termEl);
+                        first = false;
+                    });
+
+                    // Equals
+                    const eqSign = document.createElement('span');
+                    eqSign.className = 'eq-sign-display';
+                    eqSign.textContent = '=';
+                    card.appendChild(eqSign);
+
+                    // Constant
+                    const constEl = createDragConstant(eq.constant, eq.id);
+                    card.appendChild(constEl);
+
+                    pool.appendChild(card);
+                });
+            }
+
+            function createDragTerm(coeff, variable, eqId) {
+                const el = document.createElement('span');
+                el.className = 'drag-term';
+                const absCoeff = Math.abs(coeff);
+                let display;
+                if (absCoeff === 1) {
+                    display = coeff === 1 ? variable : `-${variable}`;
                 } else {
-                    newTermsMap[t.var] = (newTermsMap[t.var] || 0) + t.coeff;
+                    display = `${coeff}${variable}`;
+                }
+                el.textContent = display;
+                el.setAttribute('data-type', 'term');
+                el.setAttribute('data-coeff', coeff);
+                el.setAttribute('data-var', variable);
+                el.setAttribute('data-eq-id', eqId);
+                el.draggable = true;
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+                // Touch support
+                el.addEventListener('touchstart', handleTouchStart, { passive: false });
+                el.addEventListener('touchmove', handleTouchMove, { passive: false });
+                el.addEventListener('touchend', handleTouchEnd);
+                return el;
+            }
+
+            function createDragConstant(value, eqId) {
+                const el = document.createElement('span');
+                el.className = 'drag-term const-term';
+                el.textContent = value;
+                el.setAttribute('data-type', 'constant');
+                el.setAttribute('data-value', value);
+                el.setAttribute('data-eq-id', eqId);
+                el.draggable = true;
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+                el.addEventListener('touchstart', handleTouchStart, { passive: false });
+                el.addEventListener('touchmove', handleTouchMove, { passive: false });
+                el.addEventListener('touchend', handleTouchEnd);
+                return el;
+            }
+
+            function selectEquation(id) {
+                selectedEquationId = id;
+                document.querySelectorAll('.equation-card').forEach(c => c.classList.remove('selected'));
+                const card = document.querySelector(`.equation-card[data-eq-id='${id}']`);
+                if (card) card.classList.add('selected');
+                addLog(`👆 Pilih persamaan ID ${id}`);
+            }
+
+            // ==================== DRAG & DROP (Desktop) ====================
+            function handleDragStart(e) {
+                draggedElement = this;
+                this.style.opacity = '0.5';
+                e.dataTransfer.setData('text/plain', '');
+                e.dataTransfer.effectAllowed = 'move';
+            }
+
+            function handleDragEnd(e) {
+                this.style.opacity = '1';
+                draggedElement = null;
+                document.querySelectorAll('.workspace-half').forEach(ws => ws.classList.remove('drag-over'));
+            }
+
+            function allowDrop(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                e.currentTarget.classList.add('drag-over');
+            }
+
+            function onDropLeft(e) {
+                e.preventDefault();
+                document.getElementById('leftRuas').classList.remove('drag-over');
+                if (!draggedElement) return;
+                addCloneToWorkspace('leftRuas');
+            }
+
+            function onDropRight(e) {
+                e.preventDefault();
+                document.getElementById('rightRuas').classList.remove('drag-over');
+                if (!draggedElement) return;
+                addCloneToWorkspace('rightRuas');
+            }
+
+            function addCloneToWorkspace(sideId) {
+                const container = document.getElementById(sideId);
+                const type = draggedElement.getAttribute('data-type');
+                const clone = document.createElement('span');
+                if (type === 'term') {
+                    clone.className = 'ws-term';
+                    clone.textContent = draggedElement.textContent;
+                    clone.setAttribute('data-type', 'term');
+                    clone.setAttribute('data-coeff', draggedElement.getAttribute('data-coeff'));
+                    clone.setAttribute('data-var', draggedElement.getAttribute('data-var'));
+                } else {
+                    clone.className = 'ws-term const-ws';
+                    clone.textContent = draggedElement.textContent;
+                    clone.setAttribute('data-type', 'constant');
+                    clone.setAttribute('data-value', draggedElement.getAttribute('data-value'));
+                }
+                // Remove button
+                const removeBtn = document.createElement('span');
+                removeBtn.className = 'remove-x';
+                removeBtn.textContent = '×';
+                removeBtn.addEventListener('click', () => {
+                    clone.remove();
+                    updateWorkspaceDisplay(sideId);
+                });
+                clone.appendChild(removeBtn);
+                clone.addEventListener('click', function(e) {
+                    if (e.target === removeBtn) return;
+                    // Toggle sign on double-click
+                });
+                clone.draggable = true;
+                clone.addEventListener('dragstart', handleWorkspaceDragStart);
+                clone.addEventListener('dragend', handleWorkspaceDragEnd);
+
+                // Add operator if needed
+                const existingTerms = container.querySelectorAll('.ws-term');
+                if (existingTerms.length > 0) {
+                    const op = document.createElement('span');
+                    op.className = 'ws-op';
+                    op.textContent = '+';
+                    op.setAttribute('data-role', 'operator');
+                    container.appendChild(op);
+                }
+                container.appendChild(clone);
+                updateWorkspaceDisplay(sideId);
+            }
+
+            // Drag within/between workspaces
+            function handleWorkspaceDragStart(e) {
+                draggedElement = this;
+                this.style.opacity = '0.5';
+                e.dataTransfer.setData('text/plain', 'workspace');
+                e.dataTransfer.effectAllowed = 'move';
+            }
+
+            function handleWorkspaceDragEnd(e) {
+                this.style.opacity = '1';
+                draggedElement = null;
+                document.querySelectorAll('.workspace-half').forEach(ws => ws.classList.remove('drag-over'));
+            }
+
+            function onWorkspaceDrop(sideId, e) {
+                e.preventDefault();
+                document.getElementById(sideId).classList.remove('drag-over');
+                if (!draggedElement) return;
+                if (draggedElement.getAttribute('data-type') === 'term' || draggedElement.getAttribute(
+                        'data-type') === 'constant') {
+                    // From equation pool
+                    addCloneToWorkspace(sideId);
+                } else if (draggedElement.classList.contains('ws-term')) {
+                    // From another workspace
+                    const container = document.getElementById(sideId);
+                    const clone = draggedElement.cloneNode(true);
+                    // Re-attach remove handler
+                    const removeBtn = clone.querySelector('.remove-x');
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', () => {
+                            clone.remove();
+                            updateWorkspaceDisplay(sideId);
+                        });
+                    }
+                    clone.draggable = true;
+                    clone.addEventListener('dragstart', handleWorkspaceDragStart);
+                    clone.addEventListener('dragend', handleWorkspaceDragEnd);
+                    clone.style.opacity = '1';
+                    const existingTerms = container.querySelectorAll('.ws-term');
+                    if (existingTerms.length > 0) {
+                        const op = document.createElement('span');
+                        op.className = 'ws-op';
+                        op.textContent = '+';
+                        op.setAttribute('data-role', 'operator');
+                        container.appendChild(op);
+                    }
+                    container.appendChild(clone);
+                    draggedElement.remove();
+                    updateWorkspaceDisplay(sideId);
+                    // Also update source side
+                    updateAllWorkspaceDisplays();
+                }
+            }
+
+            function updateWorkspaceDisplay(sideId) {
+                const container = document.getElementById(sideId);
+                const emptyHint = container.querySelector('.empty-hint');
+                const terms = container.querySelectorAll('.ws-term');
+                if (terms.length === 0) {
+                    if (!emptyHint) {
+                        const hint = document.createElement('span');
+                        hint.className = 'empty-hint';
+                        hint.textContent = 'Seret suku ke sini';
+                        container.appendChild(hint);
+                    }
+                } else {
+                    if (emptyHint) emptyHint.remove();
+                }
+                // Clean up orphan operators
+                const allChildren = Array.from(container.children);
+                let prevWasTerm = false;
+                for (const child of allChildren) {
+                    if (child.classList.contains('ws-op') || child.getAttribute('data-role') === 'operator') {
+                        const nextSibling = child.nextElementSibling;
+                        if (!nextSibling || !nextSibling.classList.contains('ws-term')) {
+                            child.remove();
+                        }
+                    }
+                }
+                // Ensure operators between terms
+                const termEls = container.querySelectorAll('.ws-term');
+                if (termEls.length > 1) {
+                    // Rebuild operators
+                    const allOps = container.querySelectorAll('.ws-op, [data-role="operator"]');
+                    allOps.forEach(o => o.remove());
+                    const termArr = Array.from(container.querySelectorAll('.ws-term'));
+                    for (let i = 1; i < termArr.length; i++) {
+                        const op = document.createElement('span');
+                        op.className = 'ws-op';
+                        op.textContent = '+';
+                        op.setAttribute('data-role', 'operator');
+                        termArr[i].before(op);
+                    }
+                }
+            }
+
+            function updateAllWorkspaceDisplays() {
+                updateWorkspaceDisplay('leftRuas');
+                updateWorkspaceDisplay('rightRuas');
+            }
+
+            function clearWorkspace() {
+                document.getElementById('leftRuas').innerHTML =
+                    '<span class="ws-label">⬅️ Ruas Kiri</span><span class="empty-hint">Seret suku ke sini</span>';
+                document.getElementById('rightRuas').innerHTML =
+                    '<span class="ws-label">➡️ Ruas Kanan</span><span class="empty-hint">Seret suku ke sini</span>';
+                setupWorkspaceListeners();
+            }
+
+            function parseWorkspaceSide(sideId) {
+                const container = document.getElementById(sideId);
+                const termEls = container.querySelectorAll('.ws-term');
+                const terms = [];
+                let constant = 0;
+                let sign = 1;
+                const children = Array.from(container.children);
+                for (const child of children) {
+                    if (child.classList.contains('ws-op') || child.getAttribute('data-role') === 'operator') {
+                        sign = child.textContent.trim() === '−' ? -1 : 1;
+                    } else if (child.classList.contains('ws-term')) {
+                        if (child.getAttribute('data-type') === 'term') {
+                            const coeff = parseFloat(child.getAttribute('data-coeff')) * sign;
+                            const varName = child.getAttribute('data-var');
+                            terms.push({ coeff, var: varName });
+                        } else if (child.getAttribute('data-type') === 'constant') {
+                            constant += parseFloat(child.getAttribute('data-value')) * sign;
+                        }
+                        sign = 1;
+                    }
+                }
+                // Combine like terms
+                const combined = {};
+                terms.forEach(t => {
+                    combined[t.var] = (combined[t.var] || 0) + t.coeff;
+                });
+                const finalTerms = [];
+                for (const v of ['x', 'y', 'z']) {
+                    if (combined[v] && Math.abs(combined[v]) > 1e-9) {
+                        finalTerms.push({ coeff: combined[v], var: v });
+                    }
+                }
+                return { terms: finalTerms, constant };
+            }
+
+            // ==================== TOUCH SUPPORT ====================
+            let touchClone = null;
+            let touchOffsetX = 0;
+            let touchOffsetY = 0;
+
+            function handleTouchStart(e) {
+                if (e.target.classList.contains('remove-x')) return;
+                e.preventDefault();
+                draggedElement = this;
+                this.style.opacity = '0.5';
+                const touch = e.touches[0];
+                touchOffsetX = touch.clientX - this.getBoundingClientRect().left;
+                touchOffsetY = touch.clientY - this.getBoundingClientRect().top;
+            }
+
+            function handleTouchMove(e) {
+                if (!draggedElement) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                // Highlight workspace under touch
+                const leftRuas = document.getElementById('leftRuas');
+                const rightRuas = document.getElementById('rightRuas');
+                const leftRect = leftRuas.getBoundingClientRect();
+                const rightRect = rightRuas.getBoundingClientRect();
+                leftRuas.classList.remove('drag-over');
+                rightRuas.classList.remove('drag-over');
+                if (touch.clientX >= leftRect.left && touch.clientX <= leftRect.right &&
+                    touch.clientY >= leftRect.top && touch.clientY <= leftRect.bottom) {
+                    leftRuas.classList.add('drag-over');
+                }
+                if (touch.clientX >= rightRect.left && touch.clientX <= rightRect.right &&
+                    touch.clientY >= rightRect.top && touch.clientY <= rightRect.bottom) {
+                    rightRuas.classList.add('drag-over');
+                }
+            }
+
+            function handleTouchEnd(e) {
+                if (!draggedElement) return;
+                const touch = e.changedTouches[0];
+                const leftRuas = document.getElementById('leftRuas');
+                const rightRuas = document.getElementById('rightRuas');
+                const leftRect = leftRuas.getBoundingClientRect();
+                const rightRect = rightRuas.getBoundingClientRect();
+                leftRuas.classList.remove('drag-over');
+                rightRuas.classList.remove('drag-over');
+                if (touch.clientX >= leftRect.left && touch.clientX <= leftRect.right &&
+                    touch.clientY >= leftRect.top && touch.clientY <= leftRect.bottom) {
+                    addCloneToWorkspace('leftRuas');
+                } else if (touch.clientX >= rightRect.left && touch.clientX <= rightRect.right &&
+                    touch.clientY >= rightRect.top && touch.clientY <= rightRect.bottom) {
+                    addCloneToWorkspace('rightRuas');
+                }
+                draggedElement.style.opacity = '1';
+                draggedElement = null;
+            }
+
+            // ==================== SETUP WORKSPACE LISTENERS ====================
+            function setupWorkspaceListeners() {
+                const leftRuas = document.getElementById('leftRuas');
+                const rightRuas = document.getElementById('rightRuas');
+                leftRuas.addEventListener('dragover', allowDrop);
+                leftRuas.addEventListener('drop', (e) => onWorkspaceDrop('leftRuas', e));
+                leftRuas.addEventListener('dragleave', () => leftRuas.classList.remove('drag-over'));
+                rightRuas.addEventListener('dragover', allowDrop);
+                rightRuas.addEventListener('drop', (e) => onWorkspaceDrop('rightRuas', e));
+                rightRuas.addEventListener('dragleave', () => rightRuas.classList.remove('drag-over'));
+            }
+
+            // ==================== OPERATIONS ====================
+            function hideResult() {
+                document.getElementById('resultDisplay').classList.remove('show');
+            }
+
+            function renderAll() {
+                renderEquationInputs();
+                renderEquationPool();
+                hideResult();
+            }
+
+            // Reset
+            document.getElementById('btnReset').addEventListener('click', () => {
+                equations = [
+                    { id: 1, x: 1, y: 1, z: 1, constant: 6 },
+                    { id: 2, x: 2, y: -1, z: 1, constant: 3 },
+                    { id: 3, x: 1, y: 2, z: -1, constant: 3 }
+                ];
+                idCounter = 4;
+                selectedEquationId = null;
+                clearWorkspace();
+                hideResult();
+                renderAll();
+                addLog('🔄 Reset ke default');
+            });
+
+            // Clear workspace
+            document.getElementById('btnClearWorkspace').addEventListener('click', () => {
+                clearWorkspace();
+                addLog('🧹 Kanvas dikosongkan');
+            });
+
+            // Update from inputs
+            document.getElementById('btnUpdateFromInputs').addEventListener('click', () => {
+                renderEquationPool();
+                hideResult();
+                addLog('🔄 Tampilan diperbarui dari input');
+            });
+
+            // Add blank equation
+            document.getElementById('btnAddBlankEquation').addEventListener('click', () => {
+                const newId = idCounter++;
+                equations.push({ id: newId, x: 0, y: 0, z: 0, constant: 0 });
+                renderAll();
+                addLog(`➕ Tambah persamaan kosong ID ${newId}`);
+            });
+
+            // Multiply
+            document.getElementById('btnMultiply').addEventListener('click', () => {
+                if (!selectedEquationId) {
+                    alert('⚠️ Pilih dulu persamaan yang akan dikalikan (klik kartunya).');
+                    return;
+                }
+                const factor = parseFloat(document.getElementById('multiplierInput').value);
+                if (isNaN(factor)) {
+                    alert('⚠️ Masukkan faktor pengali yang valid.');
+                    return;
+                }
+                const eq = equations.find(e => e.id === selectedEquationId);
+                eq.x *= factor;
+                eq.y *= factor;
+                eq.z *= factor;
+                eq.constant *= factor;
+                renderAll();
+                addLog(`✖️ Persamaan ID ${selectedEquationId} dikalikan ${factor}`);
+            });
+
+            // Subtract
+            document.getElementById('btnSubtract').addEventListener('click', () => {
+                if (!selectedEquationId) {
+                    alert('⚠️ Pilih persamaan pertama (yang akan dikurangi). Klik kartunya.');
+                    return;
+                }
+                const firstEq = equations.find(e => e.id === selectedEquationId);
+                const secondId = prompt(
+                    `Masukkan ID persamaan kedua (pengurang).\nID tersedia: ${equations.map(e=>e.id).join(', ')}`);
+                if (!secondId) return;
+                const secondEq = equations.find(e => e.id === parseInt(secondId));
+                if (!secondEq) {
+                    alert('⚠️ ID tidak valid.');
+                    return;
+                }
+                const newId = idCounter++;
+                const newEq = {
+                    id: newId,
+                    x: firstEq.x - secondEq.x,
+                    y: firstEq.y - secondEq.y,
+                    z: firstEq.z - secondEq.z,
+                    constant: firstEq.constant - secondEq.constant
+                };
+                equations.push(newEq);
+                renderAll();
+                addLog(`➖ Pers.${selectedEquationId} - Pers.${secondId} → Pers.${newId} baru`);
+                alert(`✅ Persamaan baru (ID ${newId}) telah ditambahkan dari pengurangan.`);
+            });
+
+            // Substitute
+            document.getElementById('btnSubstitute').addEventListener('click', () => {
+                if (!selectedEquationId) {
+                    alert('⚠️ Pilih persamaan target yang akan disubstitusi.');
+                    return;
+                }
+                const targetEq = equations.find(e => e.id === selectedEquationId);
+                const leftExpr = parseWorkspaceSide('leftRuas');
+                const rightExpr = parseWorkspaceSide('rightRuas');
+                if (leftExpr.terms.length !== 1 || Math.abs(leftExpr.terms[0].coeff) !== 1) {
+                    alert(
+                        '⚠️ Ruas kiri kanvas harus berisi tepat SATU variabel dengan koefisien 1 atau -1.\nContoh: x saja, atau -y saja.');
+                    return;
+                }
+                const isolatedVar = leftExpr.terms[0].var;
+                const isolatedCoeff = leftExpr.terms[0].coeff;
+                const rightConstant = rightExpr.constant;
+                const rightTerms = rightExpr.terms;
+                const multiplier = isolatedCoeff === 1 ? 1 : -1;
+
+                // Build substitution
+                const newCoeffs = { x: targetEq.x, y: targetEq.y, z: targetEq.z };
+                let newConst = targetEq.constant;
+                const targetVarCoeff = newCoeffs[isolatedVar] || 0;
+                // Add targetVarCoeff * multiplier * rightTerms to each variable
+                rightTerms.forEach(rt => {
+                    newCoeffs[rt.var] = (newCoeffs[rt.var] || 0) + targetVarCoeff * multiplier * rt
+                        .coeff;
+                });
+                newConst += targetVarCoeff * multiplier * rightConstant;
+                // Zero out the isolated variable
+                newCoeffs[isolatedVar] = 0;
+                targetEq.x = newCoeffs.x;
+                targetEq.y = newCoeffs.y;
+                targetEq.z = newCoeffs.z;
+                targetEq.constant = newConst;
+                renderAll();
+                clearWorkspace();
+                addLog(
+                    `🔁 Substitusi ${isolatedVar} ke pers.${selectedEquationId} → variabel ${isolatedVar} tereliminasi`);
+                alert(
+                    `✅ Substitusi berhasil! Variabel ${isolatedVar} telah disubstitusi ke persamaan ID ${selectedEquationId}.`);
+            });
+
+            // Add new equation from workspace
+            document.getElementById('btnAddNewEquation').addEventListener('click', () => {
+                const leftExpr = parseWorkspaceSide('leftRuas');
+                const rightExpr = parseWorkspaceSide('rightRuas');
+                // Move all to left: left - right = 0 → left = right → left - right = 0
+                const combinedMap = { x: 0, y: 0, z: 0 };
+                leftExpr.terms.forEach(t => combinedMap[t.var] = (combinedMap[t.var] || 0) + t.coeff);
+                rightExpr.terms.forEach(t => combinedMap[t.var] = (combinedMap[t.var] || 0) - t.coeff);
+                const newConst = rightExpr.constant - leftExpr.constant;
+                const hasAny = Object.values(combinedMap).some(v => Math.abs(v) > 1e-9);
+                if (!hasAny && Math.abs(newConst) < 1e-9) {
+                    alert('⚠️ Kanvas kosong atau tidak valid. Seret minimal satu suku.');
+                    return;
+                }
+                const newId = idCounter++;
+                const newEq = {
+                    id: newId,
+                    x: combinedMap.x || 0,
+                    y: combinedMap.y || 0,
+                    z: combinedMap.z || 0,
+                    constant: newConst
+                };
+                equations.push(newEq);
+                renderAll();
+                clearWorkspace();
+                addLog(`➕ Persamaan baru ID ${newId} dibuat dari kanvas`);
+                alert(`✅ Persamaan baru (ID ${newId}) berhasil dibuat dari kanvas!`);
+            });
+
+            // ==================== SOLVER (Cramer's Rule) ====================
+            document.getElementById('btnSolve').addEventListener('click', () => {
+                if (equations.length < 3) {
+                    alert('⚠️ Dibutuhkan minimal 3 persamaan untuk menyelesaikan SPLTV.');
+                    return;
+                }
+                const eq = equations.slice(0, 3);
+                const a1 = eq[0].x,
+                    b1 = eq[0].y,
+                    c1 = eq[0].z,
+                    k1 = eq[0].constant;
+                const a2 = eq[1].x,
+                    b2 = eq[1].y,
+                    c2 = eq[1].z,
+                    k2 = eq[1].constant;
+                const a3 = eq[2].x,
+                    b3 = eq[2].y,
+                    c3 = eq[2].z,
+                    k3 = eq[2].constant;
+
+                const D = a1 * (b2 * c3 - b3 * c2) - b1 * (a2 * c3 - a3 * c2) + c1 * (a2 * b3 - a3 * b2);
+                const Dx = k1 * (b2 * c3 - b3 * c2) - b1 * (k2 * c3 - k3 * c2) + c1 * (k2 * b3 - k3 * b2);
+                const Dy = a1 * (k2 * c3 - k3 * c2) - k1 * (a2 * c3 - a3 * c2) + c1 * (a2 * k3 - a3 * k2);
+                const Dz = a1 * (b2 * k3 - b3 * k2) - b1 * (a2 * k3 - a3 * k2) + k1 * (a2 * b3 - a3 * b2);
+
+                const resultDisplay = document.getElementById('resultDisplay');
+                const resultValues = document.getElementById('resultValues');
+                const detInfo = document.getElementById('detInfo');
+
+                if (Math.abs(D) < 1e-9) {
+                    resultDisplay.classList.add('show');
+                    resultValues.innerHTML = '<span style="color:#ef4444;">Sistem tidak memiliki solusi tunggal</span>';
+                    detInfo.textContent =
+                        `Determinan (D) = ${D.toFixed(6)} ≈ 0. Sistem mungkin tidak konsisten atau memiliki tak hingga solusi.`;
+                } else {
+                    const x = Dx / D;
+                    const y = Dy / D;
+                    const z = Dz / D;
+                    resultDisplay.classList.add('show');
+                    resultValues.innerHTML = `
+                <span>🔵 x = <strong>${x.toFixed(4)}</strong></span>
+                <span>🟢 y = <strong>${y.toFixed(4)}</strong></span>
+                <span>🟠 z = <strong>${z.toFixed(4)}</strong></span>
+              `;
+                    detInfo.textContent =
+                        `Determinan (D) = ${D.toFixed(4)} | Dx = ${Dx.toFixed(4)} | Dy = ${Dy.toFixed(4)} | Dz = ${Dz.toFixed(4)}`;
+                    addLog(`🔍 Solusi: x=${x.toFixed(4)}, y=${y.toFixed(4)}, z=${z.toFixed(4)} (D=${D.toFixed(4)})`);
                 }
             });
-            const finalTerms = [];
-            for (const v of ['x','y','z']) {
-                if (Math.abs(newTermsMap[v]) > 1e-9) {
-                    finalTerms.push({coeff: newTermsMap[v], var: v});
-                }
-            }
-            targetEq.terms = finalTerms;
-            renderEquationPool();
-            clearWorkspace();
-            alert(`✅ Substitusi ${isolatedVar} berhasil ke persamaan ID ${selectedEquationId}.`);
-        });
 
-        // Fungsi baru: Jadikan Persamaan Baru dari Kanvas
-        document.getElementById('btnAddNewEquation').addEventListener('click', () => {
-            const leftExpr = parseWorkspaceSide('leftRuas');
-            const rightExpr = parseWorkspaceSide('rightRuas');
-            // Pindahkan semua suku ke ruas kiri: left - right = 0
-            const combinedMap = { x:0, y:0, z:0 };
-            leftExpr.terms.forEach(t => combinedMap[t.var] = (combinedMap[t.var]||0) + t.coeff);
-            rightExpr.terms.forEach(t => combinedMap[t.var] = (combinedMap[t.var]||0) - t.coeff);
-            const newConstant = leftExpr.constant - rightExpr.constant;
-            const newTerms = [];
-            for (const v of ['x','y','z']) {
-                if (Math.abs(combinedMap[v]) > 1e-9) newTerms.push({coeff: combinedMap[v], var: v});
+            // ==================== INIT ====================
+            function init() {
+                renderEquationInputs();
+                renderEquationPool();
+                setupWorkspaceListeners();
+                addLog('🚀 Aplikasi siap. Silakan eksplorasi!');
             }
-            if (newTerms.length === 0) {
-                alert('⚠️ Kanvas kosong atau tidak valid. Seret minimal satu suku.');
-                return;
-            }
-            const newId = Math.max(...equations.map(e => e.id), 0) + 1;
-            equations.push({ id: newId, terms: newTerms, constant: -newConstant }); // pindah ke kanan
-            renderEquationPool();
-            clearWorkspace();
-            alert(`✅ Persamaan baru (ID ${newId}) berhasil dibuat dari kanvas!`);
-        });
 
-        // Helper: parse workspace side
-        function parseWorkspaceSide(sideId) {
-            const container = document.getElementById(sideId);
-            const children = container.children;
-            const terms = [];
-            let constant = 0;
-            let sign = 1;
-            for (let child of children) {
-                if (child.classList.contains('operator')) {
-                    sign = child.textContent.trim() === '−' ? -1 : 1;
-                } else if (child.classList.contains('term')) {
-                    const coeff = parseFloat(child.getAttribute('data-coeff')) * sign;
-                    const varName = child.getAttribute('data-var');
-                    terms.push({ coeff, var: varName });
-                    sign = 1;
-                } else if (child.classList.contains('const-term')) {
-                    constant += parseFloat(child.getAttribute('data-value')) * sign;
-                    sign = 1;
-                }
-            }
-            return { terms, constant };
-        }
-
-        function hideResult() {
-            document.getElementById('resultDisplay').style.display = 'none';
-        }
-
-        // ===================== INISIALISASI =====================
-        renderEquationPool();
-        setupWorkspaceListeners();
-    })();
-</script>
+            init();
+        })();
+    </script>
 </body>
 </html>
